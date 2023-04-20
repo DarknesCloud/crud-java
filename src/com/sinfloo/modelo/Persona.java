@@ -3,18 +3,28 @@ package com.sinfloo.modelo;
 
 public class Persona {
     int id;
-    String nom;
-    String correo;
-    String telefono;
+    String numExpediente;
+    String numJuez;
+    String materia;
+    String tipoCaso;
+    String demandante;
+    String demandado;
+    String fechaInicio;
 
     public Persona() {
     }
 
-    public Persona(int id, String nom, String correo, String telefono) {
+    public Persona(int id, String numExpediente, String numJuez, String materia, String tipoCaso,
+                   String demandante, String demandado, String fechaInicio) {
         this.id = id;
-        this.nom = nom;
-        this.correo = correo;
-        this.telefono = telefono;
+        this.numExpediente = numExpediente;
+        this.numJuez = numJuez;
+        this.materia  = materia;
+        this.tipoCaso = tipoCaso;
+        this.demandante = demandante;
+        this.demandado = demandado;
+        this.fechaInicio = fechaInicio;
+        
     }
 
     public int getId() {
@@ -25,29 +35,63 @@ public class Persona {
         this.id = id;
     }
 
-    public String getNom() {
-        return nom;
+    public String getNumExpediente() {
+        return numExpediente;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setNumExpediente(String numExpediente) {
+        this.numExpediente = numExpediente;
     }
 
-    public String getCorreo() {
-        return correo;
+    public String getNumJuez() {
+        return numJuez;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public void setNumJuez(String numJuez) {
+        this.numJuez = numJuez;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getMateria() {
+        return materia;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setMateria(String materia) {
+        this.materia = materia;
     }
+
+    public String getTipoCaso() {
+        return tipoCaso;
+    }
+
+    public void setTipoCaso(String tipoCaso) {
+        this.tipoCaso = tipoCaso;
+    }
+
+    public String getDemandante() {
+        return demandante;
+    }
+
+    public void setDemandante(String demandante) {
+        this.demandante = demandante;
+    }
+
+    public String getDemandado() {
+        return demandado;
+    }
+
+    public void setDemandado(String demandado) {
+        this.demandado = demandado;
+    }
+
+    public String getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(String fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    
     
     
 }

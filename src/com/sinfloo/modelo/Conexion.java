@@ -1,15 +1,18 @@
 package com.sinfloo.modelo;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
+
 public class Conexion {
-    String url="jdbc:mysql://localhost:3306/bd_ejemplo";
-    String user="root",pass="12345678";    
-    Connection con;
-    public Connection getConnection(){
+    private Connection con;
+    
+    public Connection getConnection() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            con=DriverManager.getConnection(url,user,pass);
-        } catch (Exception e) {            
+            Class.forName("org.sqlite.JDBC");
+            String url = "jdbc:sqlite:C:/Users/Saul Leiva/Documents/expedientes.s3db";
+            con = DriverManager.getConnection(url);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
         }
         return con;
     }
