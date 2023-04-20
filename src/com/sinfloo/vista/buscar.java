@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -171,20 +172,54 @@ public class buscar extends javax.swing.JFrame {
         }
     }
 
+    public void buscarExpediente(String buscarExpediente) {
+        Connection con = null;
+        try {
+            Conexion conexion = new Conexion();
+            con = conexion.getConnection();
+
+            Statement stmt = con.createStatement();
+            String consulta = "SELECT * FROM expediente WHERE num_exp = '" + buscarExpediente + "'";
+            ResultSet rs = stmt.executeQuery(consulta);
+
+            if (rs.next()) {
+                String expedienteEncontrado = rs.getString("num_exp");
+
+                if (buscarExpediente.equals(expedienteEncontrado)) {
+                    String busqueda = txtBuscar.getText();
+
+                    vista miFrame2 = new vista(busqueda);
+
+                    miFrame2.setVisible(true);
+                    miFrame2.setBackground(Color.white);
+                    miFrame2.setLocationRelativeTo(null);
+                    miFrame2.setResizable(false);
+                    this.dispose();
+                    llenarTabla();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "El expediente no existe. Vuelve a intentar.");
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String busqueda = txtBuscar.getText();
 
-        vista miFrame2 = new vista(busqueda);
-
-        miFrame2.setVisible(true);
-        miFrame2.setBackground(Color.white);
-        miFrame2.setLocationRelativeTo(null);
-        miFrame2.setResizable(false);
-        this.dispose();
-        llenarTabla();
-
-
+        buscarExpediente(txtBuscar.getText());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

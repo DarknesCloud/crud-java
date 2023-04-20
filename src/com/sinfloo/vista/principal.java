@@ -58,7 +58,7 @@ public class principal extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Usuario incorrecto");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Usuario incorrecto");
+                JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos. Vuelva a intentar!");
             }
 
             rs.close();

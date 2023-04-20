@@ -4,13 +4,16 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.sinfloo.modelo.Conexion;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.font.TextAttribute;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 import javax.swing.UIManager;
@@ -55,8 +58,8 @@ public class vista extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable4 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        txtHistorial = new javax.swing.JTextArea();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        txtHistorial = new javax.swing.JEditorPane();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         txtId = new javax.swing.JTextField();
@@ -145,10 +148,7 @@ public class vista extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Detalle", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
-        txtHistorial.setColumns(20);
-        txtHistorial.setRows(5);
-        txtHistorial.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jScrollPane6.setViewportView(txtHistorial);
+        jScrollPane5.setViewportView(txtHistorial);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -156,14 +156,14 @@ public class vista extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane6)
-                .addContainerGap())
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 890, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -363,7 +363,7 @@ public class vista extends javax.swing.JFrame {
                         .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnRegrear, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -459,7 +459,6 @@ public class vista extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
 
     public void establecerRegistrosEnCampos() {
         try {
@@ -731,7 +730,19 @@ public class vista extends javax.swing.JFrame {
 
 
     private void btnNegritaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNegritaActionPerformed
-
+        Font font = txtHistorial.getFont();
+        Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
+        if (attributes.containsKey(TextAttribute.WEIGHT)) {
+            Object weight = attributes.get(TextAttribute.WEIGHT);
+            if (weight.equals(TextAttribute.WEIGHT_BOLD)) {
+                attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_REGULAR);
+            } else {
+                attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+            }
+        } else {
+            attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+        }
+        txtHistorial.setFont(font.deriveFont(attributes));
     }//GEN-LAST:event_btnNegritaActionPerformed
 
     public static void main(String args[]) {
@@ -770,7 +781,7 @@ public class vista extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
@@ -779,7 +790,7 @@ public class vista extends javax.swing.JFrame {
     public javax.swing.JTextField txtDemandante;
     public javax.swing.JTextField txtExpediente;
     public javax.swing.JTextField txtFechaInicio;
-    private javax.swing.JTextArea txtHistorial;
+    private javax.swing.JEditorPane txtHistorial;
     public javax.swing.JTextField txtId;
     public javax.swing.JTextField txtJuez;
     public javax.swing.JTextField txtMateria;
