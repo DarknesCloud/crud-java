@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.sinfloo.modelo.Conexion;
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.text.*;
 import java.awt.font.TextAttribute;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +23,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.*;
 import javax.swing.text.*;
+import javax.swing.text.html.HTMLDocument;
 
 public class vista extends javax.swing.JFrame {
 
@@ -59,7 +61,7 @@ public class vista extends javax.swing.JFrame {
         jTable4 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        txtHistorial = new javax.swing.JEditorPane();
+        txtHistorial = new javax.swing.JTextPane();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         txtId = new javax.swing.JTextField();
@@ -156,15 +158,14 @@ public class vista extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 890, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addComponent(jScrollPane5)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
@@ -363,7 +364,7 @@ public class vista extends javax.swing.JFrame {
                         .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnRegrear, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -730,19 +731,21 @@ public class vista extends javax.swing.JFrame {
 
 
     private void btnNegritaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNegritaActionPerformed
-        Font font = txtHistorial.getFont();
-        Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
-        if (attributes.containsKey(TextAttribute.WEIGHT)) {
-            Object weight = attributes.get(TextAttribute.WEIGHT);
-            if (weight.equals(TextAttribute.WEIGHT_BOLD)) {
-                attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_REGULAR);
-            } else {
-                attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
-            }
-        } else {
-            attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+        StyledDocument doc = txtHistorial.getStyledDocument();
+        int start = txtHistorial.getSelectionStart();
+        int end = txtHistorial.getSelectionEnd();
+        if (start == end) {
+            return;
         }
-        txtHistorial.setFont(font.deriveFont(attributes));
+        Element element = doc.getCharacterElement(start);
+        AttributeSet attributeSet = element.getAttributes();
+        MutableAttributeSet mutableAttributeSet = new SimpleAttributeSet(attributeSet.copyAttributes());
+        if (StyleConstants.isBold(attributeSet)) {
+            StyleConstants.setBold(mutableAttributeSet, false);
+        } else {
+            StyleConstants.setBold(mutableAttributeSet, true);
+        }
+        doc.setCharacterAttributes(start, end - start, mutableAttributeSet, false);
     }//GEN-LAST:event_btnNegritaActionPerformed
 
     public static void main(String args[]) {
@@ -790,7 +793,7 @@ public class vista extends javax.swing.JFrame {
     public javax.swing.JTextField txtDemandante;
     public javax.swing.JTextField txtExpediente;
     public javax.swing.JTextField txtFechaInicio;
-    private javax.swing.JEditorPane txtHistorial;
+    private javax.swing.JTextPane txtHistorial;
     public javax.swing.JTextField txtId;
     public javax.swing.JTextField txtJuez;
     public javax.swing.JTextField txtMateria;
