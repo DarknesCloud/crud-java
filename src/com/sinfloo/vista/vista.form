@@ -219,6 +219,8 @@
                           <Component id="btnBuscar" min="-2" pref="101" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btnRegrear" min="-2" pref="108" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="btnImprimir" min="-2" pref="108" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace pref="30" max="32767" attributes="0"/>
@@ -237,6 +239,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btnBuscar" pref="36" max="32767" attributes="0"/>
                       <Component id="btnRegrear" max="32767" attributes="0"/>
+                      <Component id="btnImprimir" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -560,7 +563,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/config/delete.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="DELETE"/>
+                <Property name="text" type="java.lang.String" value="BORRAR"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteActionPerformed"/>
@@ -577,7 +580,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/config/update.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="UPDATE"/>
+                <Property name="text" type="java.lang.String" value="ACTUALIZAR"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActualizarActionPerformed"/>
@@ -635,6 +638,27 @@
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
           </AuxValues>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnImprimir">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/config/impresora.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="IMPRIMIR"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                <LineBorder>
+                  <Color PropertyName="color" blue="9b" green="9b" red="9b" type="rgb"/>
+                </LineBorder>
+              </Border>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnImprimirActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

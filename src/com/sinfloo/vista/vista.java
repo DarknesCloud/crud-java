@@ -1,29 +1,35 @@
 package com.sinfloo.vista;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.itextpdf.text.Chunk;
 import com.sinfloo.modelo.Conexion;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.text.*;
-import java.awt.font.TextAttribute;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 import javax.swing.JOptionPane;
-import javax.swing.BorderFactory;
 import javax.swing.UIManager;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.Element;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
+import javafx.scene.text.Text;
+import static javax.swing.text.StyleConstants.FontFamily;
 
 public class vista extends javax.swing.JFrame {
 
@@ -86,6 +92,7 @@ public class vista extends javax.swing.JFrame {
         btnActualizar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         btnRegrear = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
         btnMayuscula = new javax.swing.JButton();
         btnMinus = new javax.swing.JButton();
         btnPequeño = new javax.swing.JButton();
@@ -295,7 +302,7 @@ public class vista extends javax.swing.JFrame {
 
         btnDelete.setBackground(new java.awt.Color(255, 255, 255));
         btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/config/delete.png"))); // NOI18N
-        btnDelete.setText("DELETE");
+        btnDelete.setText("BORRAR");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteActionPerformed(evt);
@@ -304,7 +311,7 @@ public class vista extends javax.swing.JFrame {
 
         btnActualizar.setBackground(new java.awt.Color(255, 255, 255));
         btnActualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/config/update.png"))); // NOI18N
-        btnActualizar.setText("UPDATE");
+        btnActualizar.setText("ACTUALIZAR");
         btnActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnActualizarActionPerformed(evt);
@@ -357,6 +364,16 @@ public class vista extends javax.swing.JFrame {
             }
         });
 
+        btnImprimir.setBackground(new java.awt.Color(255, 255, 255));
+        btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/config/impresora.png"))); // NOI18N
+        btnImprimir.setText("IMPRIMIR");
+        btnImprimir.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(155, 155, 155)));
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -371,7 +388,9 @@ public class vista extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnRegrear, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnRegrear, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -384,7 +403,8 @@ public class vista extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                    .addComponent(btnRegrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnRegrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnImprimir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         btnMayuscula.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
@@ -499,6 +519,7 @@ public class vista extends javax.swing.JFrame {
                 establecerCampos(registros.get(0));
             }
         } catch (Exception e) {
+            System.out.println(e);
         }
     }
 
@@ -524,7 +545,7 @@ public class vista extends javax.swing.JFrame {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                JOptionPane.showMessageDialog(null, "El expediente ya existe.");
+                JOptionPane.showMessageDialog(null, "El expediente ya existe. Solo se puede actualizar");
             } else {
                 sql = "INSERT INTO expediente(num_exp, num_juez, materia, tipo_caso, demandante, demandado, fecha_inicio, historial) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                 stmt = con.prepareStatement(sql);
@@ -564,11 +585,12 @@ public class vista extends javax.swing.JFrame {
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
                 JOptionPane.showMessageDialog(null, "El registro se actualizó con éxito");
-            } else {
-                JOptionPane.showMessageDialog(null, "La actualización falló");
+            } else if(rowsAffected < 0) {
+                JOptionPane.showMessageDialog(null, "La actualización falló, aun no se modifican los datos");
             }
         } catch (Exception e) {
-            System.out.println(e);
+            JOptionPane.showMessageDialog(null, "EL sistema ha fallado, ha ocurrido un error! Por favor vuelva a iniciar");
+            this.dispose();
         }
 
     }
@@ -590,6 +612,66 @@ public class vista extends javax.swing.JFrame {
         }
     }
 
+    public String capitalizarTextoPorLineas(String texto) {
+        String[] lineas = texto.split("\\n");
+        String resultado = "";
+        for (int i = 0; i < lineas.length; i++) {
+            String lineaCapitalizada = capitalizarTexto(lineas[i]);
+            resultado += lineaCapitalizada + "\n";
+        }
+        return resultado;
+    }
+
+    public String capitalizarTexto(String texto) {
+        String primeraLetra = texto.substring(0, 1).toUpperCase();
+        String restoDeLaCadena = texto.substring(1).toLowerCase();
+        String textoConvertido = primeraLetra + restoDeLaCadena;
+        return textoConvertido;
+    }
+
+    public void limpiarCampos() {
+        txtId.setText("");
+        txtExpediente.setText("");
+        txtJuez.setText("");
+        txtMateria.setText("");
+        txtTipoCaso.setText("");
+        txtDemandante.setText("");
+        txtDemandado.setText("");
+        txtFechaInicio.setText("");
+        txtHistorial.setText("");
+    }
+
+    public void generarPdf(List<String[]> datos, String rutaArchivo) {
+        try {
+            Document document = new Document(PageSize.A4, 50, 50, 50, 50);
+            PdfWriter.getInstance(document, new FileOutputStream(rutaArchivo));
+            document.open();
+
+            Chunk chunk = new Chunk("Registro de Expedientes", new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 24, Font.BOLD));
+            Paragraph paragraph = new Paragraph(chunk);
+            paragraph.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+            document.add(paragraph);
+            document.add(new Paragraph(" ")); // Agrega un espacio entre el título y los registros
+
+            for (String[] registro : datos) {
+                for (String campo : registro) {
+                    Paragraph p = new Paragraph(campo);
+                    p.setAlignment(Paragraph.ALIGN_LEFT);
+                    document.add(p);
+                }
+                document.add(new Paragraph(" "));
+            }
+
+            File file = new File(rutaArchivo);
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(file);
+            }
+            document.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         List<String[]> registro = new ArrayList<>();
@@ -639,16 +721,15 @@ public class vista extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    public void limpiarCampos() {
-        txtId.setText("");
-        txtExpediente.setText("");
-        txtJuez.setText("");
-        txtMateria.setText("");
-        txtTipoCaso.setText("");
-        txtDemandante.setText("");
-        txtDemandado.setText("");
-        txtFechaInicio.setText("");
-        txtHistorial.setText("");
+    public void toggleBoldSelectedText(JTextPane textPane) {
+        StyledDocument doc = textPane.getStyledDocument();
+        int start = textPane.getSelectionStart();
+        int end = textPane.getSelectionEnd();
+        Element elem = doc.getCharacterElement(start);
+        AttributeSet attrs = elem.getAttributes();
+        MutableAttributeSet attrSet = new SimpleAttributeSet(attrs.copyAttributes());
+        StyleConstants.setBold(attrSet, !StyleConstants.isBold(attrs));
+        doc.setCharacterAttributes(start, end - start, attrSet, true);
     }
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -696,22 +777,6 @@ public class vista extends javax.swing.JFrame {
         txtHistorial.setText(minus);
     }//GEN-LAST:event_btnMinusActionPerformed
 
-    public String capitalizarTextoPorLineas(String texto) {
-        String[] lineas = texto.split("\\n");
-        String resultado = "";
-        for (int i = 0; i < lineas.length; i++) {
-            String lineaCapitalizada = capitalizarTexto(lineas[i]);
-            resultado += lineaCapitalizada + "\n";
-        }
-        return resultado;
-    }
-
-    public String capitalizarTexto(String texto) {
-        String primeraLetra = texto.substring(0, 1).toUpperCase();
-        String restoDeLaCadena = texto.substring(1).toLowerCase();
-        String textoConvertido = primeraLetra + restoDeLaCadena;
-        return textoConvertido;
-    }
 
     private void btnCapitalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapitalizarActionPerformed
         txtHistorial.setText(capitalizarTextoPorLineas(txtHistorial.getText()));
@@ -732,17 +797,6 @@ public class vista extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnGrandeActionPerformed
 
-    public void toggleBoldSelectedText(JTextPane textPane) {
-        StyledDocument doc = textPane.getStyledDocument();
-        int start = textPane.getSelectionStart();
-        int end = textPane.getSelectionEnd();
-        Element elem = doc.getCharacterElement(start);
-        AttributeSet attrs = elem.getAttributes();
-        MutableAttributeSet attrSet = new SimpleAttributeSet(attrs.copyAttributes());
-        StyleConstants.setBold(attrSet, !StyleConstants.isBold(attrs));
-        doc.setCharacterAttributes(start, end - start, attrSet, true);
-    }
-
 
     private void btnNegritaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNegritaActionPerformed
         StyledDocument doc = txtHistorial.getStyledDocument();
@@ -762,6 +816,43 @@ public class vista extends javax.swing.JFrame {
         doc.setCharacterAttributes(start, end - start, mutableAttributeSet, false);
     }//GEN-LAST:event_btnNegritaActionPerformed
 
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        try {
+            Statement stmt = con.createStatement();
+            String consulta = "SELECT * FROM expediente";
+            ResultSet rs = stmt.executeQuery(consulta);
+            List<String[]> registros = new ArrayList<>(); // lista para guardar los registros
+            int j = 1;
+            while (rs.next()) {
+                String[] registro = new String[10]; // arreglo para guardar los valores de un registro
+
+                registro[0] = "NUMERO DE REGISTRO: " + (j++);
+                registro[1] = "ID: "+rs.getString("id");
+                registro[2] = "EXPEDIENTE: "+rs.getString("num_exp");
+                registro[3] = "JUEZ: "+rs.getString("num_juez");
+                registro[4] = "MATERIA: "+rs.getString("materia");
+                registro[5] = "DEMANDANTE: "+rs.getString("demandante");
+                registro[6] = "DEMANDADO: "+rs.getString("demandado");
+                registro[7] = "TIPO DE CASO: "+rs.getString("tipo_caso");
+                registro[8] = "FECHA DE INICIO: "+rs.getString("fecha_inicio");
+                registro[9] = "HISTORIAL: \n °"+rs.getString("historial");
+
+                registros.add(registro); // añadir el registro a la lista
+
+            }
+
+            generarPdf(registros, "C:/Users/HP/Desktop/Reportes/Reporte de expedientes.pdf"); // llamar al método generarPdf con la lista de registros
+
+            for (int i = 0; i < registros.size(); i++) {
+                String salida = Arrays.toString(registros.get(i));
+                System.out.println(salida);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+    }//GEN-LAST:event_btnImprimirActionPerformed
+
     public static void main(String args[]) {
         vista v = new vista("");
 
@@ -777,6 +868,7 @@ public class vista extends javax.swing.JFrame {
     private javax.swing.JButton btnCapitalizar;
     public javax.swing.JButton btnDelete;
     private javax.swing.JButton btnGrande;
+    private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnMayuscula;
     private javax.swing.JButton btnMinus;
     private javax.swing.JButton btnNegrita;
